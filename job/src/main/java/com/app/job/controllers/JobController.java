@@ -1,6 +1,6 @@
 package com.app.job.controllers;
 
-import com.app.job.dto.Job;
+import com.app.job.entity.Job;
 import com.app.job.service.impl.JobService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

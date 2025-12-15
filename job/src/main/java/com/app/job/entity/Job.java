@@ -1,23 +1,38 @@
-package com.app.job.dto;
+package com.app.job.entity;
+
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
+@Entity
+//@Table(name = "job_table")
 public class Job {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
     private String minSalary;
     private String maxSalary;
     private String location;
+    @ManyToOne
+    private Company company;
 
-    public Job(Long id, String title, String description, String minSalary, String maxSalary, String location) {
+    public Job(Long id, String title, String description, String minSalary, String maxSalary, String location, Company company) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.minSalary = minSalary;
         this.maxSalary = maxSalary;
         this.location = location;
+        this.company = company;
     }
+
+    public Job() {
+
+    }
+
 
     public Long getId() {
         return id;
@@ -67,28 +82,11 @@ public class Job {
         this.location = location;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Job job = (Job) object;
-        return Objects.equals(id, job.id) && Objects.equals(title, job.title) && Objects.equals(description, job.description) && Objects.equals(minSalary, job.minSalary) && Objects.equals(maxSalary, job.maxSalary) && Objects.equals(location, job.location);
+    public Company getCompany() {
+        return company;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, minSalary, maxSalary, location);
-    }
-
-    @Override
-    public String toString() {
-        return "Job{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", minSalary='" + minSalary + '\'' +
-                ", maxSalary='" + maxSalary + '\'' +
-                ", location='" + location + '\'' +
-                '}';
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }
