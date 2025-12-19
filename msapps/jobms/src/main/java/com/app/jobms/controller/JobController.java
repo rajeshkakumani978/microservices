@@ -1,6 +1,6 @@
 package com.app.jobms.controller;
 
-import com.app.jobms.dto.JobWithCompanyDTO;
+import com.app.jobms.dto.JobDTO;
 import com.app.jobms.entity.Job;
 import com.app.jobms.service.JobService;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -22,7 +22,7 @@ public class JobController {
     }
 
     @GetMapping("/jobs")
-    public ResponseEntity<List<JobWithCompanyDTO>> findAll(){
+    public ResponseEntity<List<JobDTO>> findAll(){
         return new ResponseEntity<>(jobService.findAll(), HttpStatus.OK);
     }
 
@@ -34,8 +34,8 @@ public class JobController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Job> getJobById(@PathVariable Long id){
-        Job job =  jobService.findById(id);
+    public ResponseEntity<JobDTO> getJobById(@PathVariable Long id){
+        JobDTO job =  jobService.findById(id);
         if(job != null){
             return new ResponseEntity<>(job, HttpStatus.OK);
         }
