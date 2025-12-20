@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: postgres_container
+    container_name: postgres_db
     image: postgres
     environment:
       POSTGRES_USER: postgres
@@ -13,6 +13,7 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
@@ -27,6 +28,7 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+
   zipkin:
     image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
     container_name: zipkin
@@ -43,7 +45,93 @@ services:
     # Uncomment to enable debug logging
     # command: --logging.level.zipkin2=DEBUG
 
+  config-server:
+      container_name: config-server
+      image: krajesh978/config-server:latest
+      ports:
+        - "8084:8084"
+      depends_on:
+        - service-registry
+      networks:
+        - microservice-network
+        - postgres
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+
+  service-registry:
+    container_name: service-registry
+    image: krajesh978/service-registry:latest
+    ports:
+      - "8761:8761"
+    depends_on:
+      - zipkin
+      - postgres
+      - pgadmin
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  companyms:
+    container_name: company
+    image: krajesh978/companyms:latest
+    ports:
+      - "8082:8082"
+    depends_on:
+      - service-registry
+      - config-server
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  jobms:
+    container_name: job
+    image: krajesh978/jobms:latest
+    ports:
+      - "8081:8081"
+    depends_on:
+      - service-registry
+      - config-server
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761
+
+  reviewms:
+    container_name: review
+    image: krajesh978/reviewms:latest
+    ports:
+      - "8083:8083"
+    depends_on:
+      - service-registry
+      - config-server
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  gateway:
+    container_name: gateway
+    image: krajesh978/gateway-ms:latest
+    ports:
+      - "8085:8085"
+    depends_on:
+      - service-registry
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
 networks:
+  microservice-network:
+    driver: bridge
   postgres:
     driver: bridge
 

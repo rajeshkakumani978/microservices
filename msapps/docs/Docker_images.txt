@@ -1,0 +1,20 @@
+#Docker images
+
+#Service-reg
+./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=krajesh978/service-reg"
+
+#Gateway
+./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=krajesh978/gateway-ms"
+
+#Config-server
+./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=krajesh978/config-server"
+
+#Company Ms
+./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=krajesh978/companyms"
+
+#Job Ms
+./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=krajesh978/jobms"
+
+#Review Ms
+./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=krajesh978/reviewms"
+
